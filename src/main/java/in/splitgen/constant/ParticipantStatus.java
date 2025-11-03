@@ -10,6 +10,7 @@ public enum ParticipantStatus {
     /** The user has been invited via email and has not yet accepted. */
     INVITED,
     /** The user requested to join using the tour code, awaiting admin approval. */
-    PENDING_CODE_JOIN
+    PENDING_CODE_JOIN,
+    APPROVED
 }
 

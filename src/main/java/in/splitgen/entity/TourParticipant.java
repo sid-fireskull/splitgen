@@ -39,9 +39,22 @@ public class TourParticipant {
     @Column(name = "joined_at", updatable = false)
     private LocalDateTime joinedAt;
 
+    // Track who last updated this participant (nullable)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "updated_by")
+    private User updatedBy;
+
+    // Timestamp when last updated
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     @PrePersist
     protected void onCreate() {
         this.joinedAt = LocalDateTime.now();
     }
-}
 
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+}

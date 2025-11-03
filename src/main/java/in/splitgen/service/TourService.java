@@ -54,4 +54,13 @@ public class TourService {
     public Tour updateTour(Tour tour) {
         return tourRepository.save(tour);
     }
+
+    public boolean isAdminOfTour(Long tourId, String currentUserName) {
+        Optional<Tour> optTour = tourRepository.findById(tourId);
+        if (optTour.isEmpty()) {
+            return false;
+        }
+        Tour tour = optTour.get();
+        return tour.getAdmin().getEmail().equals(currentUserName);
+    }
 }
