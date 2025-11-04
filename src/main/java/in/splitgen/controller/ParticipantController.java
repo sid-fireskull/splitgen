@@ -26,7 +26,6 @@ public class ParticipantController {
     private TourParticipantService tourParticipantService;
 
 
-
     // Requires the authenticated user to be the Admin of the Tour specified by {tourId}
     @PutMapping("{tourId}/{userId}/status")
     @PreAuthorize("@permissionEvaluator.isAdmin(authentication, #tourId)")
@@ -36,6 +35,7 @@ public class ParticipantController {
             Authentication authentication,
             @RequestBody Map<String, String> statusUpdateRequest)
     {
+        String status = statusUpdateRequest.get("status");
         if(authentication == null || !authentication.isAuthenticated()) {
             throw new AuthenticationException("Unauthorized", "User is not authenticated");
         }
@@ -51,8 +51,10 @@ public class ParticipantController {
         }
 
         TourParticipant tourParticipant = tourParticipantService.getTourParticipant(tourId,userId);
-        if(statusUpdateRequest.get("status").equals(ParticipantStatus.APPROVED);
-            tourParticipant.setStatus(ParticipantStatus.valueOf(statusUpdateRequest.get("status")));
+        if(status!=null && status.equals("APPROVED"))
+            tourParticipant.setStatus(ParticipantStatus.APPROVED);
+        else if(status!=null && status.equals("REJECTED"))
+            tourParticipant.setStatus(ParticipantStatus.REJECTED);
 
         return ResponseEntity.ok("Status updated.");
     }

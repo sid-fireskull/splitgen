@@ -33,5 +33,23 @@ public class GlobalExceptionHandler {
     public ResponseEntity<CustomException> handleAuthException(AuthenticationException ex) {
         return new ResponseEntity<CustomException>(new CustomException(ex.getMessage(), ex.getData()), HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+
+        Map<String, String> errors = new HashMap<>();
+
+        // Iterate through all field errors found in the exception's BindingResult
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            // Map the field name to the validation message (e.g., "Tour name must be...")
+            String fieldName = error.getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+
+        // Return a 400 Bad Request response with the list of errors
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
 }
 
